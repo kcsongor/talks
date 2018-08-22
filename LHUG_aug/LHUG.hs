@@ -1034,135 +1034,7 @@ type family What' where
 type family Stuck a where
 
 f :: (Maybe (Stuck Bool) ~ f a) => f Int -> Maybe Int
-f = id
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
--- Injective type families (2016) {{{1
-type family Inj1 a -- = r | r -> a where
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
--- Shouldn't this be injective? {{{1
-
--- type family Inj2 a = r | r -> a where
---   Inj2 (Maybe a) = a
-
+f x = x
 
 
 
@@ -1714,6 +1586,25 @@ type family Head_p1 (x :: k) :: j where
 
 
 
+-- How many inhabitants of Bool are there? {{{1
+type family Wat (b :: Bool) :: Nat where
+  Wat 'False = 0
+  Wat 'True  = 1
+  --
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -1851,32 +1742,48 @@ type family Boolish :: Nat -> Bool where
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 -- How many inhabitants of Bool are there? {{{1
-type family Wat (b :: Bool) :: Nat where
-  Wat 'False = 0
-  Wat 'True  = 1
-  --
+type family Wat_p1 (b :: Bool) :: Nat where
+  Wat_p1 'False = 0
+  Wat_p1 'True  = 1
+  Wat_p1 (_ n)  = n
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -2066,3 +1973,253 @@ type family Foolish :: Nat -> k where
 -- How many inhabitants of k are there? {{{1
 type family Wat' (b :: k) :: Nat where
   Wat' (f n)  = n
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+-- Injective type families (2016) {{{1
+type family Inj1 a -- = r | r -> a where
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+-- Shouldn't this be injective? {{{1
+
+-- type family Inj2 a = r | r -> a where
+--   Inj2 (Maybe a) = a
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
