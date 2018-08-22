@@ -3,6 +3,7 @@
 {-# LANGUAGE TypeFamilies           #-}
 
 module LHUG where
+import Prelude hiding (id, undefined)
 
 import GHC.TypeLits
 import Data.Kind
@@ -457,8 +458,7 @@ data N_p1 = Z_p1 | S_p1 N_p1
 type Two = 'S ('S 'Z)
 
 -- Closed type family (2014)
-type family Add (n :: Nat) (m :: Nat) :: Nat where
---
+type family Add (n :: N) (m :: N) :: N where
 
 
 
@@ -1033,8 +1033,8 @@ type family What' where
 -- Stuck type families {{{1
 type family Stuck a where
 
-not_fun :: (Maybe (Stuck Bool) ~ f a) => f Int -> Maybe Int
-not_fun = id
+f :: (Maybe (Stuck Bool) ~ f a) => f Int -> Maybe Int
+f = id
 
 
 
