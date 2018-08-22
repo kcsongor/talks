@@ -173,11 +173,9 @@ type family Arg0 :: Type -> Type
 type family Id (a :: k) :: k where
   Id a = a
 -- Non-linear patterns {{{1
-type family Equals (a :: k) (b :: j) :: Bool where
+type family Equals (a :: k) (b :: k) :: Bool where
 -- Parametricity? {{{1
 type family Id' (a :: k) :: k where
-  Id' Int = Bool
-  Id' a   = a
 -- Parametricity? {{{1
 -- How many implementations?
 type family What :: k
