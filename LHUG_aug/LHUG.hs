@@ -1,6 +1,10 @@
-{-# LANGUAGE DataKinds              #-}
-{-# LANGUAGE PolyKinds              #-}
-{-# LANGUAGE TypeFamilies           #-}
+{-# LANGUAGE DataKinds    #-}
+{-# LANGUAGE PolyKinds    #-}
+{-# LANGUAGE TypeFamilies #-}
+{-# LANGUAGE TypeInType   #-}
+
+-- Csongor Kiss
+-- Habito
 
 module LHUG where
 import Prelude hiding (id, undefined)
@@ -194,7 +198,8 @@ import Data.Kind
 -- Terms and types {{{1
 --
 
-
+five :: Int
+five = 5
 
 
 
@@ -260,7 +265,9 @@ data N = Z | S N
 two :: N
 two = S (S Z)
 
---add :: N -> N -> N
+add :: N -> N -> N
+add Z n = n
+add (S n) m = S (add n m)
 
 
 
@@ -459,6 +466,8 @@ type Two = 'S ('S 'Z)
 
 -- Closed type family (2014)
 type family Add (n :: N) (m :: N) :: N where
+  Add 'Z n = n
+  Add ('S n) m = 'S (Add n m)
 
 
 
@@ -649,6 +658,8 @@ type family Id a where
 
 -- Non-linear patterns {{{1
 type family Equals (a :: k) (b :: k) :: Bool where
+  Equals a a = 'True
+  Equals a b = 'False
 
 
 
@@ -711,9 +722,12 @@ type family Equals (a :: k) (b :: k) :: Bool where
 
 -- A note on arity {{{1
 --
-type family Arg1 (x :: Type) :: Type
+type family Arg1 (x :: Type) :: Type where
+  Arg1 Int = Maybe Int
+  Arg1 Bool = String
 -- vs
-type family Arg0 :: Type -> Type
+type family Arg0 :: Type -> Type where
+  Arg0 = Maybe
 
 
 
@@ -777,7 +791,12 @@ type family Arg0 :: Type -> Type
 
 -- Parametricity? {{{1
 type family Id' (a :: k) :: k where
+  Id' _           = Int
+  Id' x           = x
 
+-- id :: a -> a
+-- id True = False
+-- id x = x
 
 
 
@@ -840,7 +859,10 @@ type family Id' (a :: k) :: k where
 
 -- Parametricity? {{{1
 -- How many implementations?
-type family What :: k
+type family What :: k where
+  What = Int
+  What = Two
+  What = Maybe
 
 
 
@@ -904,7 +926,7 @@ type family What :: k
 -- Most general kinds? {{{1
 -- What's the inferred kind? What's the most general?
 type family What' where
-  What' = Int
+  What' = Two
 
 
 
@@ -969,6 +991,9 @@ type family What' where
 -- CUSKs {{{1
 --
 
+type family Id'' (a :: k) :: j where
+  Id'' _           = Int
+  Id'' x           = x
 
 
 
@@ -1035,6 +1060,8 @@ type family Stuck a where
 
 f :: (Maybe (Stuck Bool) ~ f a) => f Int -> Maybe Int
 f x = x
+-- Maybe ~ f
+-- Stuck Bool ~ a
 
 
 
@@ -1160,7 +1187,9 @@ f x = x
 
 -- UnApply part 1 {{{1
 type family UnApply1 (x :: Type) :: Type where
-  --
+  UnApply1 (Maybe a)    = a
+  UnApply1 (Either b a) = a
+  UnApply1 ([a])        = a
 
 
 
@@ -1419,10 +1448,15 @@ type family UnApply4 (x :: k) :: j where
 -- Computing return kinds {{{1
 type family UnApply4_p1 (x :: k) :: j where
   UnApply4_p1 (f a) = a
+  UnApply4_p1 a = a
 
 -- Dependent kinds!
 
+type family ArgKind (x :: k) :: Type where
+  ArgKind (f (a :: k)) = k
+  ArgKind (a :: k) = k
 
+type UnApply4' (x :: k) = (UnApply4 x :: ArgKind x)
 
 
 
@@ -1588,9 +1622,9 @@ type family Head_p1 (x :: k) :: j where
 
 -- How many inhabitants of Bool are there? {{{1
 type family Wat (b :: Bool) :: Nat where
-  Wat 'False = 0
-  Wat 'True  = 1
-  --
+  Wat 'False         = 0
+  Wat 'True          = 1
+  Wat (f (n :: Nat)) = n
 
 
 
@@ -1703,7 +1737,8 @@ type family Arg0_p1 :: Type -> Type
 type family Boolish :: Nat -> Bool where
 -- Boolish is stuck... no inhabitants!
 
-
+-- Boolish 0
+-- ^^^^^^^
 
 
 
@@ -1748,7 +1783,8 @@ type family Wat_p1 (b :: Bool) :: Nat where
   Wat_p1 'True  = 1
   Wat_p1 (_ n)  = n
 
-
+-- Boolish :: Nat -> Bool
+-- Wat     :: Bool -> Nat
 
 
 
@@ -1973,253 +2009,3 @@ type family Foolish :: Nat -> k where
 -- How many inhabitants of k are there? {{{1
 type family Wat' (b :: k) :: Nat where
   Wat' (f n)  = n
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
--- Injective type families (2016) {{{1
-type family Inj1 a -- = r | r -> a where
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
--- Shouldn't this be injective? {{{1
-
--- type family Inj2 a = r | r -> a where
---   Inj2 (Maybe a) = a
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
